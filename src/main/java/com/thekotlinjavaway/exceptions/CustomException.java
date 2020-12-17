@@ -1,4 +1,4 @@
 package com.thekotlinjavaway.exceptions;
 
-public class CustomException extends Exception{
+public class CustomException extends Exception {
 }

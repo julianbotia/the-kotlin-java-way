@@ -1,4 +1,4 @@
 package com.thekotlinjavaway.exceptions;
 
-public class CustomError extends Error{
+public class CustomError extends Error {
 }

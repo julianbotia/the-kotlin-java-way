@@ -1,53 +1,107 @@
 package com.thekotlinjavaway.exceptions;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        //new Main().uncheckedExceptionRuntime();
+        //new Main().uncheckedExceptionError();
+
+        new Main().writeList(Arrays.asList(1,2,3,4));
+        new Main().writeListV2(Arrays.asList(1,2,3,4));
+
     }
 
-    public void testee(){
-        throw new Throwable();
-    }
-
-    // Specify Requirement
-    public void throwAnyException2() {
+    // Catch
+    public void tryStatement() {
         try {
-            throw new Exception();
+            throwExceptionReq(); // code that could throw an exception
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    // Catch
-    public void throwAnyException() throws Exception {
+
+    // Specify Requirement
+    public void throwExceptionReq() throws Exception {
         throw new Exception();
     }
 
-    public static void checkedException(String[] args)  {
+    // Checked Exception
+    public void checkedException() {
         // The FileReader constructor throws IOException, which must be caught.
-        FileReader file = new FileReader("C:\\test\\a.txt");
-        BufferedReader fileInput = new BufferedReader(file);
-
-        // Print first 3 lines of file "C:\test\a.txt"
-        for (int counter = 0; counter < 3; counter++) {
-            // The readLine() method throws java.io.IOException, which must be caught.
-            System.out.println(fileInput.readLine());
+        try {
+            FileReader file = new FileReader("C:\\myFile.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        // The close() method throws java.io.IOException, which must be caught.
-        fileInput.close(); // java.io.IOException
     }
 
-    public void writeList() {
-        // The FileWriter constructor throws IOException, which must be caught.
-        PrintWriter out = new PrintWriter(new FileWriter("OutFile.txt"));
+    // RuntimeException
+    public void uncheckedExceptionRuntime() {
+        Long number1 = null;
+        number1.compareTo(3l); // NullPointerException
+    }
 
-        for (int i = 0; i < 10; i++) {
-            // The get(int) method throws IndexOutOfBoundsException, which must be caught.
+    // Error
+    public void uncheckedExceptionError() {
+        uncheckedExceptionError();// StackOverflowError
+    }
+
+
+    public void writeList(List<Integer> list) {
+        final int SIZE = 10;
+        PrintWriter out = null;
+
+        try {
+            System.out.println("Entering" + " try statement");
+
+            out = new PrintWriter(new FileWriter("OutFile.txt"));
+            for (int i = 0; i < SIZE; i++) {
+                out.println("Value at: " + i + " = " + list.get(i));
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Caught IndexOutOfBoundsException: " + e.getMessage());
+
+        } catch (IOException e) {
+            System.err.println("Caught IOException: " + e.getMessage());
+
+        } finally {
+            if (out != null) {
+                System.out.println("Closing PrintWriter");
+                out.close();
+            } else {
+                System.out.println("PrintWriter not open");
+            }
+        }
+    }
+
+    public void writeListV2(List<Integer> list) {
+        final int SIZE = 10;
+        try (PrintWriter out = new PrintWriter(new FileWriter("OutFile.txt"))) {
+            System.out.println("Entering" + " try statement");
+
+            for (int i = 0; i < SIZE; i++) {
+                out.println("Value at: " + i + " = " + list.get(i));
+            }
+        } catch (IndexOutOfBoundsException | IOException e) {
+            System.err.println("Caught " + e.getClass() + ": " + e.getMessage());
+        }
+    }
+
+    /*public void tryWithResourceTest() {
+        try(String s = ""){
+
+        }
+    }*/
+
+    public void writeListV3(List<Integer> list) throws IOException, IndexOutOfBoundsException/*unchecked*/ {
+        final int SIZE = 10;
+        PrintWriter out = new PrintWriter(new FileWriter("OutFile.txt"));
+        for (int i = 0; i < SIZE; i++) {
             out.println("Value at: " + i + " = " + list.get(i));
         }
         out.close();
@@ -58,7 +112,4 @@ public class Main {
         int y = 10;
         int z = y / x;
     }
-
-
-
 }

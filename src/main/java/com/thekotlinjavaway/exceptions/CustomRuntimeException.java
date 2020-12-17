@@ -1,4 +1,4 @@
 package com.thekotlinjavaway.exceptions;
 
-public class CustomRuntimeException extends RuntimeException{
+public class CustomRuntimeException extends RuntimeException {
 }
